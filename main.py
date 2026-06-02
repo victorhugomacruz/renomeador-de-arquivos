@@ -1,4 +1,5 @@
 import os
+import random  # <--- Biblioteca adicionada para gerar a aleatoriedade
 
 def obter_pasta_alvo():
     # Define o nome do arquivo de configuração (ficará na mesma pasta do script/executável)
@@ -72,20 +73,26 @@ def renomear_arquivos():
         arquivos_temporarios.append((caminho_temp, extensao))
 
     # =========================================================================
-    # PASSO 2: Renomear para a numeração final (1, 2, 3...)
+    # PASSO 2: Renomear com numeração ALEATÓRIA
     # =========================================================================
-    print("Passo 2/2: Aplicando a numeração final...\n")
+    print("Passo 2/2: Aplicando a numeração final aleatória...\n")
     
-    # O comando 'start=1' faz a contagem começar no 1 em vez do 0
-    for i, (caminho_temp, extensao) in enumerate(arquivos_temporarios, start=1):
-        novo_nome = f"{i}{extensao}"
+    # Cria uma lista com todos os números disponíveis (ex: de 1 a 600)
+    numeros_disponiveis = list(range(1, total_arquivos + 1))
+    
+    # Embaralha essa lista de números
+    random.shuffle(numeros_disponiveis)
+    
+    # Une os arquivos temporários com a nova lista de números embaralhados
+    for (caminho_temp, extensao), novo_numero in zip(arquivos_temporarios, numeros_disponiveis):
+        novo_nome = f"{novo_numero}{extensao}"
         caminho_novo = os.path.join(pasta, novo_nome)
         
         os.rename(caminho_temp, caminho_novo)
         print(f"Renomeado -> {novo_nome}")
 
     print(f"\n🎉 Processo concluído com sucesso!")
-    print(f"Todos os {total_arquivos} arquivos foram renomeados de 1 a {total_arquivos}.")
+    print(f"Todos os {total_arquivos} arquivos foram renomeados de forma sortida entre 1 e {total_arquivos}.")
 
 if __name__ == "__main__":
     renomear_arquivos()
